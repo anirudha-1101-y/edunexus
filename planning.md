@@ -414,3 +414,43 @@ Use this checklist during execution. Check off each box (`[x]`) upon successful 
 - [x] 9.3 Perform database query optimization: inspect `EXPLAIN ANALYZE` on attendance, invoice, and marks queries.
 - [x] 9.4 Configure automated daily database backups (`pg_dump` with WAL archiving to S3).
 - [x] 9.5 Perform end-to-end user journey tests for both School and College workflows.
+
+---
+
+## 10. Phase 10: Modern Enterprise HRMS-Inspired ERP Frontend Architecture
+
+### 10.1 Design System & Theme Specification
+- **Color Palette**: Enterprise Blue (`#1E40AF`, `#2563EB`, `#3B82F6`), Clean Slate/Neutral Gray (`#0F172A`, `#334155`, `#64748B`, `#F8FAFC`), Pure White (`#FFFFFF`), Soft Accents (Emerald `#10B981` for active/paid, Amber `#F59E0B` for pending/late, Rose `#EF4444` for absent/rejected, Indigo `#6366F1` for notice).
+- **Layout Shell**:
+  - `AppSidebar`: Collapsible sidebar with module groups, icons (`lucide-react`), active state indicator, institution branding, and collapse/expand toggle.
+  - `TopNavbar`: Global search bar with shortcut key (`Ctrl+K`), quick role switcher (Super Admin, Admin, Principal, Faculty, Accountant, HR Manager, Student, Parent), notification bell dropdown with unread badge, academic year selector, user profile menu with status badge.
+  - `Breadcrumbs`: Dynamic hierarchical navigation links reflecting module depth.
+  - `PageHeader`: Standardized title, descriptive subtitle, breadcrumb, and primary action buttons.
+- **Shared Enterprise UI Components**:
+  - `DashboardCard`: Metric cards with trend indicators (+/- percentages, comparison to previous term).
+  - `DataTable`: Generic paginated table supporting client-side search, multi-column sorting, row filtering, batch selection, and empty/loading skeletons.
+  - `SearchFilterBar`: Debounced search input, dropdown filter chips, and reset action.
+  - `StatusBadge`: Semantic color-coded pill indicators for all statuses across modules.
+  - `ConfirmDialog`: Reusable accessible confirmation modal for destructive or locking actions.
+  - `ToastContainer & Toast`: Non-blocking notification toasts for success, error, warning, and info states.
+  - `PrintReceiptModal`: Clean, print-optimized invoice/admission receipt preview.
+
+### 10.2 Module Inventory & Routing Hierarchy
+1. **Information Page (`/information`)**: Institution profile, accreditation, leadership desk, contact directory, academic year timeline, dynamic notices, and quick navigation cards.
+2. **Dashboard (`/dashboard` & `/`)**: Executive overview with 8 real-time KPI cards, Recharts visualizations (enrollment trends, daily attendance distribution, monthly fee collections), recent admissions roster, announcements bulletin, and quick action bar.
+3. **My Profile (`/profile`)**: Personal info, contact card, ID badges, designation/department, security tab (password change UI with strength meter), and preferences. Role-based field edit permissions.
+4. **Admissions (`/admissions`)**: Admissions pipeline KPI cards, application intake form modal, filterable candidate ledger (Pending, Under Review, Approved, Rejected), document verification checklist, and admission confirmation receipt generation.
+5. **Attendance Management (`/attendance`)**: Dual-view module (Students vs Employees), interactive date picker, class/section filter, batch roll-call marking with one-click "Mark All Present", leave application & approval sub-panel, monthly attendance calendar heatmap, and audit-lock workflow.
+6. **Fees & Finance (`/finance`)**: Fiscal ledger with collection KPIs, fee category management, class-wise fee schedules, student accounts receivable table, partial payment recording modal with automatic minor-unit calculation, and printable payment receipt view.
+7. **Communication Center (`/communication`)**: Announcements bulletin, rich announcement composer with audience targeting (Students, Parents, Teachers, Staff), broadcast priority tags, scheduled publishing UI, and interactive direct messaging thread mockup.
+8. **Reports & Analytics (`/reports`)**: Configurable report generator with academic year/class/date filters, multi-metric preview tables (Attendance, Revenue, Admissions, Performance), Recharts trend charts, and CSV/Print export triggers.
+9. **Student Information (`/students`)**: Master SIS directory, student detail modal/drawer with academic records, parent info, documents list, and attendance/fee standing; Add/Edit student form dialog with validation; Bulk CSV import interface preview.
+10. **Classes & Sections (`/academics/classes`)**: School grade levels & classroom divisions, college departments & degree programs, teacher allocation, student rosters per section, and course credit catalogs.
+11. **User Management (`/users`)**: Restricted admin portal, RBAC directory supporting 8 roles, user activation/deactivation toggle, role and permission assignment modal, and password reset workflow.
+12. **Future Modules (`/coming-soon`)**: Extensible placeholders with "Coming Soon" badges for Timetable, Exams & Results, Library, Transport, Hostel, Inventory, and Certificates.
+
+### 10.3 TypeScript Architecture & Data Decoupling
+- Centralized TypeScript interfaces in `src/types/erp.ts` matching both frontend needs and Django REST Framework serializers.
+- Robust mock data repository in `src/data/mockData.ts` with interconnected foreign-key references (e.g. students match classes, sections, invoices, and attendance logs).
+- API client wrapper in `src/services/erpService.ts` providing asynchronous CRUD operations with artificial latency, error simulation, and seamless fallback to real backend endpoints.
+
